@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gabriel-vasile/mimetype"
@@ -21,10 +22,20 @@ var (
 
 func main() {
 	wd = filepath.Base(wd)
+
 	doc, _ := goquery.NewDocumentFromReader(strings.NewReader(tpl))
 	doc.Find("title").SetText(wd)
 	doc.Find("p#title").SetText(wd)
+
+	mtime := time.Now()
 	for _, arg := range os.Args[1:] {
+		info, err := os.Stat(arg)
+		if err == nil {
+			mt := info.ModTime()
+			if mt.Before(mtime) {
+				mtime = mt
+			}
+		}
 		mime, err := mimetype.DetectFile(arg)
 		if err != nil {
 			log.Fatalf("check %s error: %s", arg, err)
@@ -42,6 +53,8 @@ func main() {
 			return
 		}
 	}
+	meta := fmt.Sprintf(`<meta name="inostar:publish" content="%s">`, mtime.Format(time.RFC1123Z))
+	doc.Find("head").AppendHtml(meta)
 
 	target := wd + ".html"
 	html, err := doc.Html()
