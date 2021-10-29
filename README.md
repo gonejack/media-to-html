@@ -1,6 +1,6 @@
 # media-to-html
 
-Command line tool for generating a html for images.
+This command line generates a html for images.
 
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/gonejack/media-to-html)
 ![Build](https://github.com/gonejack/media-to-html/actions/workflows/go.yml/badge.svg)
