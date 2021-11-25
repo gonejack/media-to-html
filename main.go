@@ -3,7 +3,6 @@ package main
 import (
 	_ "embed"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -63,7 +62,7 @@ func main() {
 		return
 	}
 
-	err = ioutil.WriteFile(target, []byte(html), 0666)
+	err = os.WriteFile(target, []byte(html), 0666)
 	if err != nil {
 		log.Fatalf("write %s error: %s", target, err)
 		return
